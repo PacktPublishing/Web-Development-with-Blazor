@@ -1,0 +1,57 @@
+﻿@*<Page>*@
+@page "/post/{BlogPostId:int}"
+@*</Page>*@
+@*<InjectAPI>*@
+@inject IMyBlogApi api
+@inject NavigationManager navman
+@*</InjectAPI>*@
+
+@*<usingmarkdig>*@
+@using Markdig;
+@*</usingmarkdig>*@
+
+@*<ShowingThePost>*@
+@if (BlogPost != null)
+{
+    <Title Value="@BlogPost.Title"></Title>
+
+    <Meta property="og:title" content="@BlogPost.Title" />
+    <Meta property="og:description" content="@BlogPost.Text.Take(100).ToString()" />
+    <Meta property="og:image" content="@($"{navman.BaseUri}/pathtoanimage.png")" />
+    <Meta property="og:url" content="@navman.Uri" />
+    <Meta name="twitter:card" content="@BlogPost.Text.Take(100).ToString()" />
+
+    <h3>@BlogPost.Title</h3>
+    @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text, pipeline))
+}
+@*</ShowingThePost>*@
+@code {
+    @*<BlogPostId>*@
+    [Parameter]
+    public int BlogPostId { get; set; }
+    @*</BlogPostId>*@
+
+    @*<BlogPost>*@
+    public BlogPost BlogPost { get; set; }
+    @*</BlogPost>*@
+
+    @*<OnParametersSetAsync>*@
+    protected async override Task OnParametersSetAsync()
+    {
+        BlogPost = await api.GetBlogPostAsync(BlogPostId);
+        await base.OnParametersSetAsync();
+    }
+    @*</OnParametersSetAsync>*@
+
+    @*<OnInitializedAsync>*@
+    MarkdownPipeline pipeline;
+
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+                 .UseEmojiAndSmiley()
+                 .Build();
+        return base.OnInitializedAsync();
+    }
+    @*</OnInitializedAsync>*@
+}

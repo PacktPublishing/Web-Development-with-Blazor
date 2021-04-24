@@ -1,0 +1,25 @@
+﻿@page "/testDB"
+@using MyBlog.Data.Interfaces
+@using MyBlog.Data.Models 
+@inject IMyBlogApi api
+<h3>DBTest</h3>
+
+<button @onclick="CreateCategory">Create Category</button>
+<button @onclick="DeleteCategoty">Delete Category</button>
+
+
+@code {
+        public async Task CreateCategory()
+        {
+            var cat = await api.SaveCategoryAsync(new Category { Name = "test" });
+        }
+
+        public async Task DeleteCategoty()
+        {
+            var cat = (await api.GetCategoriesAsync()).FirstOrDefault();
+            if (cat != null)
+            {
+                await api.DeleteCategoryAsync(cat);
+            }
+        }
+}

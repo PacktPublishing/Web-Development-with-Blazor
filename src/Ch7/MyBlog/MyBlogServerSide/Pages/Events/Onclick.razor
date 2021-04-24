@@ -1,0 +1,11 @@
+﻿@page "/events/onclick"
+<h3>onclick</h3>
+
+@message
+
+<button @onclick="@((e)=>message=$"x:{e.ClientX} y:{e.ClientY}")">Click me</button>
+
+@code {
+    string message = "";
+
+}

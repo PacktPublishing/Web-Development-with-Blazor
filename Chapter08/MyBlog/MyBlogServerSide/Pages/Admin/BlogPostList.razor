@@ -1,0 +1,28 @@
+﻿@attribute [Authorize]
+@*<top>*@
+@page "/admin/blogposts"
+@inject IMyBlogApi api
+<a href="/admin/blogposts/new">New blog post</a>
+<ul>
+    <Virtualize ItemsProvider="LoadPosts" Context="p">
+        <li>@p.PublishDate <a href="/admin/blogposts/@p.Id">@p.Title</a></li>
+    </Virtualize>
+</ul>
+@*</top>*@
+
+@*<LoadPosts>*@
+@code{
+    public int TotalBlogposts { get; set; }
+    private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+    {
+        if (TotalBlogposts == 0)
+        {
+            TotalBlogposts = await api.GetBlogPostCountAsync();
+        }
+        var numblogposts = Math.Min(request.Count, TotalBlogposts - request.StartIndex);
+        var posts = await api.GetBlogPostsAsync(numblogposts, request.StartIndex);
+
+        return new ItemsProviderResult<BlogPost>(posts, TotalBlogposts);
+    }
+}    
+@*</LoadPosts>*@

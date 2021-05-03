@@ -1,0 +1,16 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<AuthorizeView Roles="Administrator">
+    <Authorized>
+        You are an admin!
+    </Authorized>
+    <NotAuthorized>
+        Not logged in or not administrator
+    </NotAuthorized>
+</AuthorizeView>

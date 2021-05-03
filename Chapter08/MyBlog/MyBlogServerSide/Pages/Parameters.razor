@@ -1,0 +1,8 @@
+﻿@page "/parameterdemo/{MyParameter:int}"
+
+@MyParameter
+
+@code {
+    [Parameter]
+    public int MyParameter { get; set; }
+}

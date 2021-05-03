@@ -1,0 +1,30 @@
+﻿@page "/formtest"
+@using System.ComponentModel.DataAnnotations
+@using MyBlogServerSide.Components
+@if (model != null)
+{
+<EditForm Model="model">
+    <DataAnnotationsValidator/>
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider"/>
+   
+    <BootstrapInputText @bind-Value="model.Name" LabelText="Name"/>
+   
+    <ValidationMessage For="@(() => model.Name)" />
+    <InputNumber @bind-Value="model.Age"></InputNumber>
+    <InputDate @bind-Value="model.Birthday"></InputDate>
+</EditForm>
+}
+
+@code {
+    PersonTest model = new PersonTest();
+
+    public class PersonTest
+    {
+        [Required(AllowEmptyStrings =false)]
+        [Display(Name="Name",Description = "Text to help you")]
+        public string? Name { get; set; }
+        [Range(1,99)]
+        public int Age { get; set; }
+        public DateTime? Birthday { get; set; } = null;
+    }
+}

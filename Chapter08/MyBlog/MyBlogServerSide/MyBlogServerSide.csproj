@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\BootstrapCssClassProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Nuget.config" />
+  </ItemGroup>
+<!--<Nuget>-->
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.22.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.sqlite" Version="5.0.1" />
+  </ItemGroup>
+<!--</Nuget>-->
+  <ItemGroup>
+    <ProjectReference Include="..\MyBlog.Data\MyBlog.Data.csproj" />
+  </ItemGroup>
+
+</Project>

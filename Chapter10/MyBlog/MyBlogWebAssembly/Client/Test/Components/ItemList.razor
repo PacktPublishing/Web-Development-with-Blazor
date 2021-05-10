@@ -1,0 +1,31 @@
+﻿@*<Markup>*@
+@typeparam ItemType
+@using System.Collections.Generic
+
+<h3>List</h3>
+<table>
+    <Virtualize Items="Items" Context="item">
+        <tr>
+            <td><button class="btn btn-primary" @onclick="@(()=> { SelectEvent.InvokeAsync(item); })">Select</button></td>
+            <td>@ItemTemplate(item)</td>
+            <td><button class="btn btn-danger" @onclick="@(()=>{DeleteEvent.InvokeAsync(item);})">Delete</button></td>
+        </tr>
+    </Virtualize>
+</table>
+@*</Markup>*@
+
+@code {
+    @*<Code>*@
+    [Parameter]
+    public List<ItemType> Items { get; set; } = new List<ItemType>();
+    [Parameter]
+    public RenderFragment<ItemType> ItemTemplate { get; set; }
+
+    @*</Code>*@
+    @*<Events>*@
+    [Parameter]
+    public EventCallback<ItemType> DeleteEvent { get; set; }
+    [Parameter]
+    public EventCallback<ItemType> SelectEvent { get; set; }
+    @*</Events>*@
+}

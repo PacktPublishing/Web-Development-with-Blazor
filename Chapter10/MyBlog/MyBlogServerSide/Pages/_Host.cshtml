@@ -1,0 +1,45 @@
+﻿@page "/"
+@namespace BlazorTestServerSide.Pages
+@using MyBlogServerSide
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlazorTestServerSide</title>
+    @*<Base>*@
+    <base href="~/" />
+    @*</Base>*@
+    <link rel="stylesheet" href="_content/MyBlog.Shared/MyBlogStyle.min.css" />
+    <link href="MyBlogServerSide.styles.css" rel="stylesheet" />
+</head>
+<body>
+    @*<App>*@
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+    @*</App>*@
+    @*<Errorui>*@
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    @*</Errorui>*@
+    @*<Script>*@
+    <script src="_framework/blazor.server.js"></script>
+    @*</Script>*@
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+</body>
+</html>

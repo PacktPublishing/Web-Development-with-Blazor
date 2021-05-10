@@ -1,0 +1,103 @@
+﻿@*<Inherits>*@
+@inherits Microsoft.AspNetCore.Components.Forms.InputBase<string?>
+@*</Inherits>*@
+@*<Using>*@
+@using System.ComponentModel.DataAnnotations
+@using System
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Diagnostics.CodeAnalysis
+@*</Using>*@
+
+<div class="form-group">
+    @*<LabelAndInput>*@
+    <label for="@id.ToString()">@LabelText</label>
+    <input @ref="element" id="@id.ToString()" type="@Type" class="@CssClass" @attributes="@AdditionalAttributes" @onfocus="@(()=>ShowError=true)" placeholder="@PlaceHolder" @bind="@CurrentValue">
+    @*</LabelAndInput>*@
+
+    @*<Description>*@
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <small class="form-text text-muted">@Description</small>
+    }
+    @*</Description>*@
+
+    @*<Error>*@
+    @if (ShowError)
+    {
+        @foreach (var message in EditContext.GetValidationMessages(FieldIdentifier))
+        {
+            <div class="validation-message">@message</div>
+        }
+    }
+    @*</Error>*@
+</div>
+@code{
+    @*<Parameters>*@
+    Guid id = Guid.NewGuid();
+    [Parameter] public bool ShowError { get; set; } = false;
+    [Parameter] public string LabelText { get; set; } = "";
+    [Parameter] public string PlaceHolder { get; set; } = "";
+    [Parameter] public string Description { get; set; } = "";
+    [Parameter] public string Type { get; set; } = "text";
+    ElementReference element { get; set; }
+    @*</Parameters>*@
+    @*<Reflection>*@
+    protected override Task OnParametersSetAsync()
+    {
+        try
+        {
+            var displayattribute = this.FieldIdentifier.Model?.GetType()?
+            .GetProperty(this.FieldIdentifier.FieldName)?
+            .GetCustomAttribute<DisplayAttribute>();
+            if (displayattribute != null)
+            {
+                var displayName = displayattribute.Name;
+                if (!string.IsNullOrEmpty(displayName) && string.IsNullOrEmpty(LabelText))
+                {
+                    LabelText = displayName;
+                }
+                var placeholder = displayattribute.Prompt;
+                if (!string.IsNullOrEmpty(placeholder) && string.IsNullOrEmpty(PlaceHolder))
+                {
+                    PlaceHolder = placeholder;
+                }
+                var description = displayattribute.Description;
+                if (!string.IsNullOrEmpty(description) && string.IsNullOrEmpty(Description))
+                {
+                    Description = description;
+                }
+            }
+        }
+        catch { }
+
+        return base.OnParametersSetAsync();
+    }
+    @*</Reflection>*@
+
+    @*<Autofocus>*@
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            @if (AdditionalAttributes != null && AdditionalAttributes.ContainsKey("autofocus"))
+            {
+                if (AdditionalAttributes["autofocus"]?.ToString()?.ToLower() == "true")
+                {
+                    await element.FocusAsync();
+                }
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    @*</Autofocus>*@
+
+    @*<TryParseValueFromString>*@
+    protected override bool TryParseValueFromString(string? value, out string? result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        result = value;
+        validationErrorMessage = null;
+        return true;
+    }
+    @*</TryParseValueFromString>*@
+}

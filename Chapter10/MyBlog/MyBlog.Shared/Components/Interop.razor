@@ -1,0 +1,22 @@
+﻿@page "/interop"
+@inject IJSRuntime jsRuntime
+@implements IDisposable
+<button type="button" class="btn btn-primary" @onclick="async ()=> { await TriggerNetInstanceMethod(); }">
+    Trigger .NET instance method HelloHelper.SayHello
+</button>
+@code {
+    private DotNetObjectReference<HelloHelper> objRef;
+    
+    IJSObjectReference jsmodule;
+    public async ValueTask<string> TriggerNetInstanceMethod()
+    {
+        objRef = DotNetObjectReference.Create(new HelloHelper("Bruce Wayne"));
+        jsmodule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/_content/MyBlog.Shared/Interop.razor.js");
+        return await jsmodule.InvokeAsync<string>("sayHello", objRef);
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+}

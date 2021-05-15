@@ -1,0 +1,60 @@
+﻿@page "/"
+@inject IMyBlogApi api
+@using Markdig;
+
+<Virtualize @ref="virtualize" ItemsProvider="LoadPosts" Context="p">
+@*<Post>*@
+    <article>
+        <h2>@p.Title</h2>
+        @((MarkupString)GetFirstParagraph(Markdig.Markdown.ToHtml(p.Text, pipeline)))
+        <br />
+        <a href="/Post/@p.Id">Read more</a>
+    </article>
+@*</Post>*@
+</Virtualize>
+
+@code{
+@*<FirstParagraph>*@
+public string GetFirstParagraph(string html)
+{
+    var m = System.Text.RegularExpressions.Regex.Matches(html, @"<p>(.*?)</p>",System.Text.RegularExpressions.RegexOptions.Singleline);
+    if (m.Count>0)
+    {
+        return m[0].Groups[1].Value;
+    }
+    else
+    {
+        return "";
+    }
+}
+@*</FirstParagraph>*@
+
+
+
+@*<OnInitializedAsync>*@
+MarkdownPipeline pipeline;
+
+protected override Task OnInitializedAsync()
+{
+    pipeline = new MarkdownPipelineBuilder()
+                .UseEmojiAndSmiley()
+                .Build();
+    return base.OnInitializedAsync();
+}
+@*</OnInitializedAsync>*@
+@*<LoadPosts>*@
+private Virtualize<BlogPost> virtualize { get; set; }
+public int totalBlogposts { get; set; }
+private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+{
+    if (totalBlogposts == 0)
+    {
+        totalBlogposts = await api.GetBlogPostCountAsync();
+    }
+    var numblogposts = Math.Min(request.Count, totalBlogposts - request.StartIndex);
+    var posts = await api.GetBlogPostsAsync(numblogposts, request.StartIndex);
+
+    return new ItemsProviderResult<BlogPost>(posts, totalBlogposts);
+}
+@*</LoadPosts>*@
+}

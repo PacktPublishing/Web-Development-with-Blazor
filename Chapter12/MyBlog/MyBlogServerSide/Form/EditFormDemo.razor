@@ -1,0 +1,14 @@
+﻿<EditForm Model="personmodel" OnValidSubmit="validSubmit">
+    ...
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    Person personmodel = new Person();
+
+    private Task validSubmit()
+    {
+        //Do database stuff
+        return Task.CompletedTask;
+    }
+}

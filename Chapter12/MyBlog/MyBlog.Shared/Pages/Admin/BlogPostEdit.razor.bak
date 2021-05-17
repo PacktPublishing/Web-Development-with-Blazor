@@ -1,0 +1,145 @@
+﻿@attribute [Authorize]
+@*<top>*@
+@page "/Admin/BlogPosts/new"
+@page "/Admin/BlogPosts/{Id:int}"
+@inject IMyBlogApi api
+@inject NavigationManager manager
+@using Markdig;
+@*</top>*@
+
+@*<NotificationService1>*@
+@using MyBlog.Shared.Interfaces
+@inject IBlogNotificationService notificationService
+@*</NotificationService1>*@
+
+@*<BrowserStorage>*@
+@inject MyBlog.Shared.Interfaces.IBrowserStorage storage
+@*</BrowserStorage>*@
+
+
+@*<form>*@
+<EditForm Model="post" OnValidSubmit="SavePost">
+    <DataAnnotationsValidator />
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+    <InputText @bind-Value="post.Title"></InputText>
+    <InputDate @bind-Value="post.PublishDate"></InputDate>
+    <InputSelect @bind-Value="selectedCategory">
+        <option value="0" disabled>None selected</option>
+        @foreach (var category in categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </InputSelect>
+    <ul>
+        @foreach (var tag in tags)
+        {
+            <li>
+                @tag.Name
+                @if (post.Tags != null && post.Tags.Any(t => t.Id == tag.Id))
+                {
+                    <button type="button" @onclick="@(() => { post.Tags.Remove(post.Tags.Single(t=>t.Id==tag.Id)); })">Remove</button>
+                }
+                else
+                {
+                    <button type="button" @onclick="@(() => { post.Tags.Add(tag); })">Add</button>
+                }
+            </li>
+        }
+    </ul>
+    <InputTextAreaOnInput @bind-Value="post.Text" @onkeyup="async ()=> { await UpdateHTMLAsync(); }"></InputTextAreaOnInput>
+    <button type="submit" class="btn btn-success">Save</button>
+</EditForm>
+@*</form>*@
+
+@*<output>*@
+@((MarkupString)markDownAsHTML)
+@*</output>*@
+
+@code{
+    @*<variables>*@
+    [Parameter]
+    public int? Id { get; set; }
+    BlogPost post { get; set; } = new BlogPost();
+    List<Category>? categories { get; set; } = new List<Category>();
+    List<Tag>? tags { get; set; } = new List<Tag>();
+    int selectedCategory = 0;
+    string? markDownAsHTML { get; set; }
+    @*</variables>*@
+    @*<markdig>*@
+    MarkdownPipeline pipeline;
+
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+                 .UseEmojiAndSmiley()
+                 .Build();
+        return base.OnInitializedAsync();
+    }
+    @*</markdig>*@
+
+    //<SaveToStorage>
+    protected async Task UpdateHTMLAsync()
+    {
+        if (post.Text != null)
+        {
+            markDownAsHTML = Markdig.Markdown.ToHtml(post.Text, pipeline);
+            if (post.Id == 0)
+            {
+                await storage.SetAsync("EditCurrentPost", post);
+            }
+            //<Notification2>
+            await notificationService.SendNotification(post);
+            //</Notification2>
+        }
+    }
+    //</SaveToStorage>
+
+    bool hasTag(MyBlog.Data.Models.Tag tag)
+    {
+        return post.Tags.Contains(tag);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            post = await api.GetBlogPostAsync(Id.Value);
+            if (post.Category != null)
+            {
+                selectedCategory = post.Category.Id;
+            }
+
+            await UpdateHTMLAsync();
+
+        }
+        //<AddElse>
+        else
+        {
+            var saved = await storage.GetAsync<BlogPost>("EditCurrentPost");
+            if (saved != null)
+            {
+                post = saved;
+            }
+        }
+        //</AddElse>
+        categories = await api.GetCategoriesAsync();
+        tags = await api.GetTagsAsync();
+        base.OnParametersSet();
+    }
+    @*<save>*@
+    public async Task SavePost()
+    {
+        if (selectedCategory != 0 && categories != null)
+        {
+            var category = categories.FirstOrDefault(c => c.Id == selectedCategory);
+            if (category != null)
+            {
+                post.Category = category;
+            }
+        }
+
+        await api.SaveBlogPostAsync(post);
+        manager.NavigateTo("/Admin/Blogposts");
+    }
+    @*</save>*@
+}

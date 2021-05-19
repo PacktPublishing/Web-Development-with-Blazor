@@ -1,0 +1,75 @@
+﻿@attribute [Authorize]
+@*<Top>*@
+@page "/Admin/Categories"
+@inject IMyBlogApi api
+<h3>Categories</h3>
+@*</Top>*@
+@*<Form>*@
+<EditForm OnValidSubmit="Save" Model="Item">
+    <DataAnnotationsValidator />
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+    <InputText @bind-Value="@Item.Name" />
+    <ValidationMessage For="@(()=>Item.Name)" />
+    <button class="btn btn-success" type="submit">Save</button>
+</EditForm>
+@*</Form>*@
+@*<List>*@
+<ItemList Items="items" DeleteEvent="@Delete" SelectEvent="@Select" ItemType="Category">
+    <ItemTemplate>
+        @{
+            var item = context as Category;
+            if (item != null)
+            {
+                @item.Name;
+            }
+        }
+    </ItemTemplate>
+</ItemList>
+@*</List>*@
+
+@*<Code>*@
+@code {
+    private List<Category> items { get; set; } = new List<Category>();
+    public Category Item { get; set; } = new Category();
+
+    protected async override Task OnInitializedAsync()
+    {
+        items = await api.GetCategoriesAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Delete(Category category)
+    {
+        try
+        {
+            await api.DeleteCategoryAsync(category);
+            items.Remove(category);
+        }
+        catch { }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            if (Item.Id == 0)
+            {
+                items.Add(Item);
+            }
+            await api.SaveCategoryAsync(Item);
+            Item = new Category();
+        }
+        catch { }
+    }
+
+    private Task Select(Category category)
+    {
+        try
+        {
+            Item = category;
+        }
+        catch { }
+        return Task.CompletedTask;
+    }
+}
+@*</Code>*@

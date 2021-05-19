@@ -1,0 +1,75 @@
+﻿@attribute [Authorize]
+@*<Top>*@
+@page "/Admin/Tags"
+@inject IMyBlogApi api
+<h3>Tags</h3>
+@*</Top>*@
+@*<Form>*@
+<EditForm OnValidSubmit="Save" Model="Item">
+    <DataAnnotationsValidator />
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+    <InputText @bind-Value="@Item.Name" />
+    <ValidationMessage For="@(()=>Item.Name)" />
+    <button class="btn btn-success" type="submit">Save</button>
+</EditForm>
+@*</Form>*@
+@*<List>*@
+<ItemList Items="items" DeleteEvent="@Delete" SelectEvent="@Select" ItemType="Tag">
+    <ItemTemplate>
+        @{
+            var item = context as Tag;
+            if(item!=null)
+            {
+            @item.Name;
+            }
+        }
+    </ItemTemplate>
+</ItemList>
+@*</List>*@
+@*<Code>*@
+@code {
+    private List<Tag> items { get; set; } = new List<Tag>();
+    public Tag Item { get; set; } = new Tag();
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        items = await api.GetTagsAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Delete(Tag tag)
+    {
+        try
+        {
+            await api.DeleteTagAsync(tag);
+            items.Remove(tag);
+        }
+        catch { }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            if (Item.Id == 0)
+            {
+                items.Add(Item);
+            }
+            await api.SaveTagAsync(Item);
+            Item = new Tag();
+        }
+        catch { }
+    }
+
+    private Task Select(Tag tag)
+    {
+        try
+        {
+            Item = tag;
+        }
+        catch { }
+        return Task.CompletedTask;
+    }
+}
+@*</Code>*@

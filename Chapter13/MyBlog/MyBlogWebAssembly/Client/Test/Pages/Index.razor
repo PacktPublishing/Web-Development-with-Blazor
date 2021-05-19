@@ -1,0 +1,43 @@
+﻿@page "/"
+@inject IMyBlogApi api
+
+<button @onclick="AddSomePosts">Add some fake posts</button>
+<br />
+<br />
+
+<ul>
+    <Virtualize @ref="virtualize" ItemsProvider="LoadPosts" Context="p">
+        <li><a href="/Post/@p.Id">@p.Title</a></li>
+    </Virtualize>
+</ul>
+
+
+@code{
+
+@*<LoadPosts>*@
+private Virtualize<BlogPost> virtualize { get; set; }
+public int totalBlogposts { get; set; }
+private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+{
+    if (totalBlogposts == 0)
+    {
+        totalBlogposts = await api.GetBlogPostCountAsync();
+    }
+    var numblogposts = Math.Min(request.Count, totalBlogposts - request.StartIndex);
+    var posts = await api.GetBlogPostsAsync(numblogposts, request.StartIndex);
+
+    return new ItemsProviderResult<BlogPost>(posts, totalBlogposts);
+}
+@*</LoadPosts>*@
+
+protected async Task AddSomePosts()
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        await api.SaveBlogPostAsync(new BlogPost() { PublishDate = DateTime.Now, Title = $"Blog post {i}", Text = "Text" });
+    }
+    totalBlogposts = 0;
+    await virtualize.RefreshDataAsync();
+    StateHasChanged();
+}
+}

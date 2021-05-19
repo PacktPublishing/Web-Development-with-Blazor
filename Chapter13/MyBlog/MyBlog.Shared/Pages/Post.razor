@@ -1,0 +1,71 @@
+﻿@*<NotificationService1>*@
+@using MyBlog.Shared.Interfaces
+@inject IBlogNotificationService notificationService
+@implements IDisposable
+@*</NotificationService1>*@
+
+
+@page "/post/{BlogPostId:int}"
+@inject IMyBlogApi api
+@inject NavigationManager navman
+@using Markdig;
+
+@if (BlogPost != null)
+{
+    <Title Value="@BlogPost.Title"></Title>
+
+    <Meta property="og:title" content="@BlogPost.Title" />
+    <Meta property="og:description" content="@BlogPost.Text.Take(100).ToString()" />
+    <Meta property="og:image" content="@($"{navman.BaseUri}/pathtoanimage.png")" />
+    <Meta property="og:url" content="@navman.Uri" />
+    <Meta name="twitter:card" content="@BlogPost.Text.Take(100).ToString()" />
+    <a href="/">back</a>
+    <h3>@BlogPost.Title</h3>
+    @((MarkupString)Markdig.Markdown.ToHtml(BlogPost.Text, pipeline))
+}
+
+@code {
+
+    [Parameter]
+    public int BlogPostId { get; set; }
+
+    public BlogPost BlogPost { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        BlogPost = await api.GetBlogPostAsync(BlogPostId);
+        await base.OnParametersSetAsync();
+    }
+
+    MarkdownPipeline pipeline;
+
+    protected override Task OnInitializedAsync()
+    {
+        @*<NotificationService2>*@
+        notificationService.BlogPostChanged += PostChanged;
+        @*</NotificationService2>*@
+
+        pipeline = new MarkdownPipelineBuilder()
+             .UseEmojiAndSmiley()
+             .Build();
+        return base.OnInitializedAsync();
+    }
+
+    @*<NotificationService3>*@
+    private async void PostChanged(BlogPost post)
+    {
+        if (BlogPost.Id == post.Id)
+        {
+            BlogPost = post;
+            await InvokeAsync(() => this.StateHasChanged());
+        }
+    }
+    @*</NotificationService3>*@
+    @*<NotificationService4>*@
+    void IDisposable.Dispose()
+    {
+        notificationService.BlogPostChanged -= PostChanged;
+    }
+    @*</NotificationService4>*@
+
+}

@@ -27,7 +27,7 @@
         <option value="0" disabled>None selected</option>
    	@if (Categories != null)
     {
-        @foreach (var category in categories)
+        @foreach (var category in Categories)
     	{
     		<option value="@category.Id">@category.Name</option>
 		}
@@ -135,9 +135,9 @@
     @*<save>*@
     public async Task SavePost()
     {
-        if (selectedCategory != 0 && categories != null)
+        if (selectedCategory != 0 && Categories != null)
         {
-            var category = categories.FirstOrDefault(c => c.Id == selectedCategory);
+            var category = Categories.FirstOrDefault(c => c.Id == selectedCategory);
             if (category != null)
             {
                 Post.Category = category;

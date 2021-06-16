@@ -1,10 +1,10 @@
-# Web Development with Blazor and .NET
+# Web Development with Blazor
 
 <a href="https://www.packtpub.com/product/web-development-with-blazor-and-net-5/9781800208728"><img src="https://static.packt-cdn.com/products/9781800208728/cover/smaller" alt="Web Development with Blazor and .NET" height="256px" align="right"></a>
 
-This is the code repository for [Web Development with Blazor and .NET](https://www.packtpub.com/product/web-development-with-blazor-and-net-5/9781800208728), published by Packt.
+This is the code repository for [Web Development with Blazor](https://www.packtpub.com/product/web-development-with-blazor-and-net-5/9781800208728), published by Packt.
 
-**A hands-on guide to building interactive web UIs with Blazor and C#**
+**A hands-on guide for .NET developers to build interactive UIs with C#**
 
 ## What is this book about?
 Until now, creating interactive web pages also meant using JavaScript programming. With Blazor, Microsoft's new way to create .NET web applications, developers can now easily build interactive and rich web applications using C#. Web Development with Blazor and .NET will guide you through the most common challenges in getting started with Blazor.

@@ -55,6 +55,11 @@ With the following software and hardware list you can run all code files present
 
 We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://static.packt-cdn.com/downloads/9781800208728_ColorImages.pdf).
 
+## Errata 
+
+Page 10 (Paragraph 3, line 2): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
+Page 35 (Paragraph 2, line 1): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
+
 ### Related products <Other books you may enjoy>
 * An Atypical ASP.NET Core 5 Design Patterns Guide [[Packt]](https://www.packtpub.com/product/an-atypical-asp-net-core-5-design-patterns-guide/9781789346091) [[Amazon]](https://www.amazon.com/dp/1789346096)
 

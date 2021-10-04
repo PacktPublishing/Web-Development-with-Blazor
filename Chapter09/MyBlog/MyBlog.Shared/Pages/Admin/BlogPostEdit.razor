@@ -49,8 +49,8 @@
 [Parameter]
 public int? Id { get; set; }
 BlogPost Post { get; set; } = new BlogPost();
-List<Category>? Categories { get; set; }= new List<Category>();
-List<Tag>? Tags { get; set; } = new List<Tag>();
+List<Category>? Categories { get; set; }= new ();
+List<Tag>? Tags { get; set; } = new ();
 int selectedCategory = 0;
 string? markDownAsHTML { get; set; }
 @*</variables>*@

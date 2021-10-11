@@ -63,7 +63,17 @@ Page 35 (Paragraph 2, line 1): **Chapter 3, Introducing Entity Framework Core** 
 
 Page 151 The **MyBlogAPIClientSide.cs** are missing some steps in the book, please use the source code for reference.
 
+Page 164 Step 8 also need ```AddRoles<IdentityRole>()```
+```
+            services.AddDbContext<MyBlogDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("MyBlogDB")));
+            services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<MyBlogDbContext>();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AppUser>>();
+```
+
 Page 187 Step 5 refers to the **MyBlog.Shared** project that we haven't created yet, skip adding it to the project and go back and add it after completing the steps on page 189.
+
 
 
 ### Related products <Other books you may enjoy>

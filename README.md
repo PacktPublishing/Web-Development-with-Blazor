@@ -74,6 +74,17 @@ Page 164 Step 8 also need ```AddRoles<IdentityRole>()```
 
 Page 187 Step 5 refers to the **MyBlog.Shared** project that we haven't created yet, skip adding it to the project and go back and add it after completing the steps on page 189.
 
+Page 235 **BlazorWebAssemblyBlogNotificationService.cs**
+The code snippet:
+```public Action<BlogPost> BlogPostChanged { get; set; }```
+Should be
+```public event Action<BlogPost> BlogPostChanged;```  
+
+Page 241 **IBlogNotificationService.cs**
+The code snippet 
+```Action<BlogPost> BlogPostChanged {get; set;}```
+Should be:
+```event Action<BlogPost> BlogPostChanged;```
 
 
 ### Related products <Other books you may enjoy>

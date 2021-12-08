@@ -74,6 +74,13 @@ Page 164 Step 8 also need ```AddRoles<IdentityRole>()```
 
 Page 187 Step 5 refers to the **MyBlog.Shared** project that we haven't created yet, skip adding it to the project and go back and add it after completing the steps on page 189.
 
+Page 139 Step 10
+Make sure to initialize the variables like this:
+```
+List<Category> Categories { get; set; } = new();
+List<Tag> Tags { get; set; } = new();
+```
+
 Page 235 **BlazorWebAssemblyBlogNotificationService.cs**
 The code snippet:
 ```public Action<BlogPost> BlogPostChanged { get; set; }```

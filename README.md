@@ -61,6 +61,11 @@ Page 10 (Paragraph 3, line 2): **Chapter 3, Introducing Entity Framework Core** 
 
 Page 35 (Paragraph 2, line 1): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
 
+Page 54 Make sure the Tags property is also instantiated like this:
+```
+public ICollection<Tag> Tags { get; set; }=new List<Tag>();
+```
+
 Page 151 The **MyBlogAPIClientSide.cs** are missing some steps in the book, please use the source code for reference.
 
 Page 164 Step 8 also need ```AddRoles<IdentityRole>()```

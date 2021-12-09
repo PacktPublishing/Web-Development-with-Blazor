@@ -61,7 +61,7 @@ Page 10 (Paragraph 3, line 2): **Chapter 3, Introducing Entity Framework Core** 
 
 Page 35 (Paragraph 2, line 1): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
 
-Page 54 Make sure the Tags property is also instantiated like this:
+Page 54 **BlogPost.cs** Make sure the Tags property is also instantiated like this:
 ```
 public ICollection<Tag> Tags { get; set; }=new List<Tag>();
 ```

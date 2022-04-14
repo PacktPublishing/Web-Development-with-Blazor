@@ -33,9 +33,17 @@
     
     protected async Task AddSomePosts()
     {
-        for (int i = 1; i <= 10; i++)
+        var category = await api.SaveCategoryAsync(new Category() { Name = "New Category" });
+        for (int i = 0; i < 10; i++)
         {
-            await api.SaveBlogPostAsync(new BlogPost() { PublishDate = DateTime.Now, Title = $"Blog post {i}", Text = "Text" });
-        }
+            var post = new BlogPost
+                {
+                   PublishDate = DateTime.Now, 
+                   Title = $"Blog post {i}", 
+                   Text = "Text",
+                   Category=category
+                };
+            await api.SaveBlogPostAsync(post);
+        }   
     }
 }

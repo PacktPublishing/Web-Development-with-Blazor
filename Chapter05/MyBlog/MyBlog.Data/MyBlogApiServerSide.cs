@@ -96,7 +96,16 @@ namespace MyBlog.Data
             using var context = factory.CreateDbContext();
             if (item.Id == 0)
             {
-                context.Add(item);
+                if (item is BlogPost)
+                {
+                    var post = item as BlogPost;
+                    post.Category = await context.Categories.FirstOrDefaultAsync(c => c.Id == post.Category.Id);
+                    context.Add(item);
+                }
+                else
+                {
+                    context.Add(item);
+                }
             }
             else
             {

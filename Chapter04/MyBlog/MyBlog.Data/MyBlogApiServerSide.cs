@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+﻿using Microsoft.EntityFrameworkCore;
 using MyBlog.Data.Interfaces;
 using MyBlog.Data.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyBlog.Data
 {
@@ -22,7 +21,7 @@ namespace MyBlog.Data
         public async Task<BlogPost> GetBlogPostAsync(int id)
         {
             using var context = factory.CreateDbContext();
-            return await context.BlogPosts.Include(p=>p.Category).Include(p=>p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+            return await context.BlogPosts.Include(p => p.Category).Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<int> GetBlogPostCountAsync()
@@ -34,7 +33,7 @@ namespace MyBlog.Data
         public async Task<List<BlogPost>> GetBlogPostsAsync(int numberofposts, int startindex)
         {
             using var context = factory.CreateDbContext();
-            return await context.BlogPosts.OrderByDescending(p=>p.PublishDate).Skip(startindex).Take(numberofposts).ToListAsync();
+            return await context.BlogPosts.OrderByDescending(p => p.PublishDate).Skip(startindex).Take(numberofposts).ToListAsync();
         }
         //</GetBlogPosts>
         //<GetCategories>
@@ -47,7 +46,7 @@ namespace MyBlog.Data
         public async Task<Category> GetCategoryAsync(int id)
         {
             using var context = factory.CreateDbContext();
-            return await context.Categories.Include(p => p.BlogPosts).FirstOrDefaultAsync(c=>c.Id==id);
+            return await context.Categories.Include(p => p.BlogPosts).FirstOrDefaultAsync(c => c.Id == id);
         }
         //</GetCategories>
         //<GetTags>
@@ -72,7 +71,7 @@ namespace MyBlog.Data
             await context.SaveChangesAsync();
         }
         //</Delete>
-        
+
         //<DeleteMethods>
         public async Task DeleteBlogPostAsync(BlogPost item)
         {
@@ -96,7 +95,16 @@ namespace MyBlog.Data
             using var context = factory.CreateDbContext();
             if (item.Id == 0)
             {
-                context.Add(item);
+                if (item is BlogPost)
+                {
+                    var post = item as BlogPost;
+                    post.Category = await context.Categories.FirstOrDefaultAsync(c => c.Id == post.Category.Id);
+                    context.Add(item);
+                }
+                else
+                {
+                    context.Add(item);
+                }
             }
             else
             {

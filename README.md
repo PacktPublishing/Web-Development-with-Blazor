@@ -66,6 +66,65 @@ Page 54 **BlogPost.cs** Make sure the Tags property is also instantiated like th
 public ICollection<Tag> Tags { get; set; }=new List<Tag>();
 ```
 
+Page 63-66 In the **MyBlog.Data-project** in the file **MyBlogApiServerSide.cs**  we need to add some code to **SaveItem** method need some additional code to set the category.
+``` csharp
+private async Task<IMyBlogItem> SaveItem(IMyBlogItem item)
+{
+    using var context = factory.CreateDbContext();
+    if (item.Id == 0)
+    {
+        if (item is BlogPost)
+        {
+            var post = item as BlogPost;
+            post.Category = await context.Categories.FirstOrDefaultAsync(c => c.Id == post.Category.Id);
+            context.Add(item);
+        }
+        else
+        {
+            context.Add(item);
+        }
+    }
+    else
+    {
+        if (item is BlogPost)
+        {
+            var post = item as BlogPost;
+            var currentpost = await context.BlogPosts.Include(p => p.Category).Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+            currentpost.PublishDate = post.PublishDate;
+            currentpost.Title = post.Title;
+            currentpost.Text = post.Text;
+            var ids = post.Tags.Select(t => t.Id);
+            currentpost.Tags = context.Tags.Where(t => ids.Contains(t.Id)).ToList();
+            currentpost.Category = await context.Categories.FirstOrDefaultAsync(c => c.Id == post.Category.Id);
+            await context.SaveChangesAsync();
+        }
+        else
+        {
+            context.Entry(item).State = EntityState.Modified;
+        }
+    }
+    await context.SaveChangesAsync();
+    return item;
+}
+```
+Page 92 In MyBlogServerside/Pages/Index.razor we need to add a category as well.
+``` csharp 
+protected async Task AddSomePosts()
+{
+    var category = await api.SaveCategoryAsync(new Category() { Name = "New Category" });
+    for (int i = 0; i < 10; i++)
+    {
+        var post = new BlogPost
+            {
+               PublishDate = DateTime.Now, 
+               Title = $"Blog post {i}", 
+               Text = "Text",
+               Category=category
+            };
+        await api.SaveBlogPostAsync(post);
+    }   
+}
+```
 Page 151 The **MyBlogAPIClientSide.cs** are missing some steps in the book, please use the source code for reference.
 
 Page 164 Step 8 also need ```AddRoles<IdentityRole>()```

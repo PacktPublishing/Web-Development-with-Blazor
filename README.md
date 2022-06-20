@@ -58,6 +58,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ## Errata 
 
 Page 10 (Paragraph 3, line 2): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
+Page 8 (line 8): **We will take a look at these this book.** should be **We will take a look at these IN this book.**
 
 Page 35 (Paragraph 2, line 1): **Chapter 3, Introducing Entity Framework Core** should be **Chapter 4, Understanding Basic Blazor Components**
 

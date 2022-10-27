@@ -169,3 +169,7 @@ Should be:
 has been developing ever since he was 7 years old and got his first computer. He loves to be on the cutting edge of technology, trying new things. When he got wind of Blazor, he immediately realized the potential and adopted it already when it was in Beta. He has been running Blazor in production since it was launched by Microsoft.
 His passion for the .NET industry and community has taken him around the world, speaking about development. Microsoft has recognized this passion by awarding him the Microsoft Most Valuable Professional 7 years in a row.
 
+### Download a free PDF
+
+ <i>If you have already purchased a print or Kindle version of this book, you can get a DRM-free PDF version at no cost.<br>Simply click on the link to claim your free PDF.</i>
+<p align="center"> <a href="https://packt.link/free-ebook/9781800208728">https://packt.link/free-ebook/9781800208728 </a> </p>

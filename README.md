@@ -170,6 +170,12 @@ The code snippet
 Should be:
 ```event Action<BlogPost> BlogPostChanged;```
 
+Page 90 (last code snippet ,line 3)
+
+``` To pass a value to the component, we surround it with a CascadingValue component like this: ```
+Should be:
+``` // To pass a value to the component, we surround it with a CascadingValue component like this: ```
+
 
 ### Related products <Other books you may enjoy>
 * An Atypical ASP.NET Core 5 Design Patterns Guide [[Packt]](https://www.packtpub.com/product/an-atypical-asp-net-core-5-design-patterns-guide/9781789346091) [[Amazon]](https://www.amazon.com/dp/1789346096)
